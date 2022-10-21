@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/militch/libexswap/amm"
+)
 
-func main(){
-    fmt.Printf("hello, word\n");
+func main(){ 
+    amm.Amm()
+    fmt.Printf("hello, word\n")
 }

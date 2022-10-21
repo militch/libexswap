@@ -1,0 +1,5 @@
+package amm
+
+func Amm(){
+
+}
