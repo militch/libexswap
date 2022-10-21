@@ -2,7 +2,6 @@
 #define TOKEN_H_
 
 struct amm_token {
-    int balance;
     int total_supply;
 };
 
@@ -17,4 +16,4 @@ void amm_token_mint(amm_token_t*, int);
 // 获取余额
 int amm_token_get_balance(int);
 
-#endif // TOKEN_H_
+#endif
