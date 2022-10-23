@@ -4,21 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// 初始化
-void amm_exchange_init(amm_exchange_t *ex, unsigned int total_supply,
-                       unsigned int balance, unsigned int token_balance){
-    ex->total_supply = total_supply;
-    ex->balance = balance;
-    ex->token_balance = token_balance;
-}
 
-amm_exchange_t *amm_exchange_new(unsigned int total_supply, unsigned int balance,
-                                 unsigned int token_balance){
+amm_exchange_t *amm_exchange_new(){
     amm_exchange_t *ex = malloc(sizeof(amm_exchange_t));
     if (!ex) {
         return NULL;
     }
-    amm_exchange_init(ex, total_supply, balance, token_balance);
     return ex;
 }
 

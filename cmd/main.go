@@ -6,6 +6,8 @@ import (
 )
 
 func main(){ 
-    amm.Amm()
+    ex := amm.NewExchange()
+    _ = ex
+    //ex.AddLiquidity()
     fmt.Printf("hello, word\n")
 }

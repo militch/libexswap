@@ -1,5 +1,0 @@
-package amm
-
-func Amm(){
-
-}

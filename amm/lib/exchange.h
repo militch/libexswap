@@ -15,7 +15,7 @@ struct amm_exchange {
     unsigned int token_balance;
 };
 
-#define amm_exchange_t struct amm_exchange
+typedef struct amm_exchange amm_exchange_t;
 
 /**
  * 构造交易所
@@ -23,7 +23,7 @@ struct amm_exchange {
  * @param balance 通证余额
  * @param token_balance 通证余额
  */
-amm_exchange_t *amm_exchange_new(unsigned int, unsigned int, unsigned int);
+amm_exchange_t *amm_exchange_new();
 
 /**
  * 增加流动性

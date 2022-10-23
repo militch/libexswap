@@ -3,6 +3,8 @@
 
 #include "exchange.h"
 
+#include "uint256.h"
+
 int getfn(){
     printf("abc\n"); 
     return 0;
@@ -17,41 +19,49 @@ unsigned int fen2yuan(unsigned int n){
 }
 
 int main(int argc, char* argv[]){
-    
+    uint256_t *a = UINT256_U64((2));
+    uint256_mul(a, UINT256_U64(2));
+    // for (int i=0; i<10; i++){
+    //     uint256_add(a, a);
+    //     uint256_t *u = UINT256(532 * i);
+    //     uint256_add(a, u);
+    // }
+    char out[4];
+    uint256_to_hex(a, out, sizeof(out));
     // 通证
     // amm_token_t *token;
     // token = amm_token_new(1);
 
-    amm_exchange_t *ex;
-    // 初始化交换池
-    ex = amm_exchange_new(0, 0, 0);
-    printf("-- amm_add_liquidity: 00\n");
-    ex->balance += yuan2fen(1000);
-    int err = amm_add_liquidity(ex, 0, yuan2fen(10000), yuan2fen(100));
-    if (err) {
-        printf("amm_add_liquidity() = false\n");
-        return 1;
-    }
-
-    // printf("-- amm_get_input_price:\n");
-    // unsigned int delta_sold = yuan2fen(500);
-    // unsigned int p = amm_get_delta_to_token_input_price(ex, delta_sold);
-    // printf("price: %d\n", p);
-    // ex->token_balance -= p;
-    // for (int i=0; i<10; i++) {
-    //     err = amm_delta_to_token_input_price(ex, yuan2fen(10), 1);
-    //     if (err) {
-    //         printf("amm_delta_to_token_input_price() = false\n");
-    //         return 1;
-    //     }
+    // amm_exchange_t *ex;
+    // // 初始化交换池
+    // ex = amm_exchange_new();
+    // printf("-- amm_add_liquidity: 00\n");
+    // ex->balance += yuan2fen(1000);
+    // int err = amm_add_liquidity(ex, 0, yuan2fen(10000), yuan2fen(100));
+    // if (err) {
+    //     printf("amm_add_liquidity() = false\n");
+    //     return 1;
     // }
-    unsigned int p = amm_get_delta_to_token_input_price(ex, yuan2fen(10));
 
-    printf("amm_delta_to_token_input_price(1) = %d\n", p);
-    printf("-- gettotal\n");
-    printf("token_balance: %d\n", ex->token_balance);
-    printf("total_supply: %d\n", ex->total_supply);
-    printf("balance: %d\n", ex->balance);
+    // // printf("-- amm_get_input_price:\n");
+    // // unsigned int delta_sold = yuan2fen(500);
+    // // unsigned int p = amm_get_delta_to_token_input_price(ex, delta_sold);
+    // // printf("price: %d\n", p);
+    // // ex->token_balance -= p;
+    // // for (int i=0; i<10; i++) {
+    // //     err = amm_delta_to_token_input_price(ex, yuan2fen(10), 1);
+    // //     if (err) {
+    // //         printf("amm_delta_to_token_input_price() = false\n");
+    // //         return 1;
+    // //     }
+    // // }
+    // unsigned int p = amm_get_delta_to_token_input_price(ex, yuan2fen(10));
+
+    // printf("amm_delta_to_token_input_price(1) = %d\n", p);
+    // printf("-- gettotal\n");
+    // printf("token_balance: %d\n", ex->token_balance);
+    // printf("total_supply: %d\n", ex->total_supply);
+    // printf("balance: %d\n", ex->balance);
 
     //amm_get_input_price(ex, );
     //amm_set_token_balance(ex, token_balance);
