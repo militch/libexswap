@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/militch/libexswap/common"
+	"github.com/militch/exswap/common"
 )
 
 type Exchange interface {
