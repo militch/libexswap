@@ -2,7 +2,7 @@ CREATE TABLE `account_token_assets` (
     `id` int NOT NULL AUTO_INCREMENT COMMENT '资产id',
     `user_id` varchar(150) NOT NULL COMMENT '用户ID',
     `token_symbol` varchar(150) NOT NULL COMMENT '通证符号',
-    `token_decimals` varchar(150) NOT NULL COMMENT '通证精度',
+    `token_decimals` tinyint(1) NOT NULL DEFAULT '18' COMMENT '通证精度',
     `token_balance` varchar(150) NOT NULL COMMENT '通证余额',
     `create_time` datetime NOT NULL DEFAULT current_timestamp COMMENT '创建时间',
     `update_time` datetime NOT NULL DEFAULT current_timestamp COMMENT '更新时间',
@@ -89,7 +89,7 @@ CREATE TABLE `exchange_pool` (
     `decimals` tinyint(1) NOT NULL DEFAULT '18' COMMENT '交易池精度',
     `main_balance` varchar(150) NOT NULL DEFAULT '0' COMMENT '交易池余额(主)',
     `second_balance` varchar(150) NOT NULL DEFAULT '0' COMMENT '交易池余额(次)',
-    `totalSupply` varchar(150) NOT NULL DEFAULT '0' COMMENT '总供给量(流动性)',
+    `total_supply` varchar(150) NOT NULL DEFAULT '0' COMMENT '总供给量(流动性)',
     `create_time` datetime NOT NULL DEFAULT current_timestamp COMMENT '创建时间',
     `update_time` datetime NOT NULL DEFAULT current_timestamp COMMENT '更新时间',
     KEY (`id`)

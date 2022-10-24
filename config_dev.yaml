@@ -1,0 +1,12 @@
+mysql:
+  host: '10.1.1.132'
+  port: '3306'
+  config: "charset=utf8mb4&parseTime=True&loc=Local"
+  db-name: 'exchange_swap'
+  username: 'sysadmin'
+  password: 'admin888'
+  max-idle-conns: 10
+  max-open-conns: 100
+  max-conn-life-time: "60s"
+  log-mode: error
+  log-zap: false
