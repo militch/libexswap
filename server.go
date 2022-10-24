@@ -1,4 +1,4 @@
-package libexswap
+package exswap
 
 import (
 	"net"

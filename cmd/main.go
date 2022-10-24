@@ -23,7 +23,7 @@ func init(){
 
 func main(){ 
     flag.Parse()
-    srv := new(libexswap.Server)
+    srv := new(exswap.Server)
     addr := host + ":" + port
     if address != "" {
         addr = address
