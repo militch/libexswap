@@ -2,9 +2,8 @@ package exswap
 
 import (
 	"net"
-
 	"github.com/gin-gonic/gin"
-	"github.com/militch/exswap/handles"
+	"github.com/militch/exswap/handlers"
 )
 
 type Server struct {
@@ -15,37 +14,40 @@ type Server struct {
 
 func (srv *Server) initialRouters(){
     ginapp := srv.ginapp
-    accountGroup := ginapp.Group("/accounts")
+    // 账户相关模块
+    accountGroup := ginapp.Group("/account")
     accountGroup.GET("/assets", 
-        handles.AccountGetAssets)
+        handlers.AccountGetAssets)
     accountGroup.GET("/logs", 
-        handles.AccountGetLogs)
+        handlers.AccountGetLogs)
     accountGroup.POST("/transfer", 
-        handles.AccountTransfer)
+        handlers.AccountTransfer)
 
+    // 市场相关模块
     marketGroup := ginapp.Group("/market")
     marketGroup.GET("/latest", 
-        handles.MarketGetLatest)
+        handlers.MarketGetLatest)
     marketGroup.GET("/history", 
-        handles.MarketGetLatest)
+        handlers.MarketGetHistory)
     marketGroup.GET("/trades", 
-        handles.MarketGetTrades)
+        handlers.MarketGetTrades)
 
+    // 交易相关模块
     exchangeGroup := ginapp.Group("/exchange")
     exchangeGroup.GET("/tokens", 
-        handles.ExchangeGetTokens)
+        handlers.ExchangeGetTokens)
     exchangeGroup.GET("/pools", 
-        handles.ExchangeGetPools)
+        handlers.ExchangeGetPools)
     exchangeGroup.GET("/pools/:name", 
-        handles.ExchangeGetPoolDetail)
+        handlers.ExchangeGetPoolDetail)
     exchangeGroup.POST("/liquidity", 
-        handles.ExchangeAddPoolLiquidity)
+        handlers.ExchangeAddPoolLiquidity)
     exchangeGroup.DELETE("/liquidity", 
-        handles.ExchangeRemovePoolLiquidity)
+        handlers.ExchangeRemovePoolLiquidity)
     exchangeGroup.POST("/trade", 
-        handles.ExchangeTrade)
+        handlers.ExchangeTrade)
     exchangeGroup.POST("/trade/test", 
-        handles.ExchangeTestTrade)
+        handlers.ExchangeTestTrade)
 }
 
 func (srv *Server) ListenAndServe() error {
@@ -54,6 +56,8 @@ func (srv *Server) ListenAndServe() error {
     }
     ginapp := gin.Default()
     srv.ginapp = ginapp
+    ginapp.NoRoute(handlers.HandleNoRoute())
+    ginapp.Use(handlers.HandleErrors())
     srv.initialRouters()
     ln, err := net.Listen("tcp", srv.ListenAddr)
 	if err != nil {
