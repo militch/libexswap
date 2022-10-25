@@ -2,20 +2,29 @@ package exswap
 
 import (
 	"net"
+
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 	"github.com/militch/exswap/handlers"
+	"github.com/militch/exswap/core"
 )
 
 type Server struct {
     ginapp  *gin.Engine
     ListenAddr string
     Debug bool
+    DB *sqlx.DB
 }
 
 func (srv *Server) initialRouters(){
     ginapp := srv.ginapp
+    srvCtx := &core.ServerContext{
+        DB: srv.DB,
+    }
+    handlers.SrvContext = srvCtx
     // 账户相关模块
-    accountGroup := ginapp.Group("/account")
+    accountGroup := ginapp.Group(
+        "/account")
     accountGroup.GET("/assets", 
         handlers.AccountGetAssets)
     accountGroup.GET("/logs", 
@@ -24,7 +33,8 @@ func (srv *Server) initialRouters(){
         handlers.AccountTransfer)
 
     // 市场相关模块
-    marketGroup := ginapp.Group("/market")
+    marketGroup := ginapp.Group(
+        "/market")
     marketGroup.GET("/latest", 
         handlers.MarketGetLatest)
     marketGroup.GET("/history", 
@@ -33,7 +43,8 @@ func (srv *Server) initialRouters(){
         handlers.MarketGetTrades)
 
     // 交易相关模块
-    exchangeGroup := ginapp.Group("/exchange")
+    exchangeGroup := ginapp.Group(
+        "/exchange")
     exchangeGroup.GET("/tokens", 
         handlers.ExchangeGetTokens)
     exchangeGroup.GET("/pools", 
@@ -48,6 +59,14 @@ func (srv *Server) initialRouters(){
         handlers.ExchangeTrade)
     exchangeGroup.POST("/trade/test", 
         handlers.ExchangeTestTrade)
+
+    // 业务搜索模块
+    searchGroup := ginapp.Group(
+        "/search")
+    searchGroup.GET("/tokens", 
+        handlers.SearchTokens)
+    searchGroup.GET("/pools", 
+        handlers.SearchPools)
 }
 
 func (srv *Server) ListenAndServe() error {

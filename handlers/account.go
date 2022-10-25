@@ -1,9 +1,12 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
+)
 
 func AccountGetAssets(ctx *gin.Context) {
-    
+    logrus.Infof("get asserts %v", GetDB())
 }
 
 func AccountGetLogs(ctx *gin.Context) {
