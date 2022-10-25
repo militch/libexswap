@@ -16,20 +16,6 @@ func (e *RespError) Error() string {
     return e.Err.Error()
 } 
 
-func SendRespError(ctx *gin.Context, code int, err error) {
-    if err == nil {
-        panic("err is nil")
-    }
-    var parsedErr *RespError
-    ok := errors.As(err, &parsedErr)
-    if !ok {
-        parsedErr = &RespError{
-            Err: err,
-            Code: code,
-        }
-    }
-    _ = ctx.Error(parsedErr)
-}
 
 type ErrorResp struct {
     Code int `json:"code"`
