@@ -12,6 +12,7 @@ type Paginaction struct {
     Page int `json:"page"`
     PerPage int `json:"perPage"`
     Total int `json:"total"`
+    Size int `json:"size"`
 }
 
 type Search struct {
