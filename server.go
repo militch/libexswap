@@ -2,11 +2,11 @@ package exswap
 
 import (
 	"net"
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/jmoiron/sqlx"
-	"github.com/militch/exswap/handlers"
 	"github.com/militch/exswap/core"
+	"github.com/militch/exswap/handlers"
 )
 
 type Server struct {
@@ -22,6 +22,14 @@ func (srv *Server) initialRouters(){
         DB: srv.DB,
     }
     handlers.SrvContext = srvCtx
+    // AMM 开发模块
+
+    developGroup := ginapp.Group(
+        "/develop")
+    // 流动性趋势
+    developGroup.GET("/liquidity", 
+        handlers.AmmLiquidity)
+
     // 账户相关模块
     accountGroup := ginapp.Group(
         "/account")
@@ -76,6 +84,7 @@ func (srv *Server) ListenAndServe() error {
     ginapp := gin.Default()
     srv.ginapp = ginapp
     ginapp.NoRoute(handlers.HandleNoRoute())
+    ginapp.Use(cors.Default())
     ginapp.Use(handlers.HandleErrors())
     srv.initialRouters()
     ln, err := net.Listen("tcp", srv.ListenAddr)

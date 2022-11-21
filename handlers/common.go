@@ -59,6 +59,11 @@ func SendError(ctx *gin.Context, code int, err error) {
     }
     _ = ctx.Error(parsedErr)
 }
+
+func SendData(c *gin.Context, d interface{}){
+    c.JSON(200, d)
+}
+
 // 发送分页数据
 func SendPage(c *gin.Context, p *Paginaction){
     c.JSON(200, p)

@@ -4,6 +4,15 @@ import (
 	"fmt"
 )
 
+func GetOne(db string, dest interface{}, 
+    sql string, args ...interface{}) error {
+    sql = fmt.Sprintf(
+        `SELECT * FROM %s %s LIMIT 1;`, 
+        db, sql)
+    return GetDB().Get(
+        dest, sql, args...)
+}
+
 func SelectPage(db string, p *Paginaction,
     dest interface{}, sql string, 
     args ...interface{}) (*Paginaction, error) {

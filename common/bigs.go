@@ -7,6 +7,9 @@ import (
 var (
     BIG_ZERO = new(big.Int)
     BIG_ONE = new(big.Int).SetUint64(1)
+    BIG_TEN = new(big.Int).SetUint64(10)
+    BIG_EIGHT = new(big.Int).SetUint64(8)
+    BIG_TEN_POW_EIGHT = new(big.Int).Exp(BIG_TEN, BIG_EIGHT, nil)
 )
 
 // a greater then b

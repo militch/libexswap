@@ -96,9 +96,7 @@ CREATE TABLE `exchange_token_pair` (
 
 CREATE TABLE `exchange_pool` (
     `id` int NOT NULL AUTO_INCREMENT COMMENT '交易池ID', 
-    `name` varchar(150) NOT NULL COMMENT '交易池名称', 
-    `token_main` varchar(150) NOT NULL COMMENT '主要的通证符号', 
-    `token_second` varchar(150) NOT NULL COMMENT '次要的通证符号',
+    `name` varchar(150) NOT NULL COMMENT '交易对名称', 
     `main_balance` varchar(150) NOT NULL DEFAULT '0' COMMENT '交易池余额(主)',
     `second_balance` varchar(150) NOT NULL DEFAULT '0' COMMENT '交易池余额(次)',
     `total_supply` varchar(150) NOT NULL DEFAULT '0' COMMENT '总供给量(流动性)',

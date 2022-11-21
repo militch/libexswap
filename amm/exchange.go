@@ -4,12 +4,11 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
-
 	"github.com/militch/exswap/common"
 )
 
 type Exchange interface {
-    AddLiquidity(*big.Int, *big.Int, *big.Int) (*big.Int,error)
+    AddLiquidity(*big.Int, *big.Int, *big.Int) (*big.Int, *big.Int, error)
     RemoveLiquidity(*big.Int, *big.Int, *big.Int) (*big.Int,*big.Int,error)
     GetInputPrice(*big.Int, *big.Int, *big.Int) (*big.Int,error)
     GetOutputPrice(*big.Int, *big.Int, *big.Int) (*big.Int,error)
@@ -26,7 +25,11 @@ type exchange struct {
 }
 
 func NewExchange() *exchange {
-    return &exchange{}
+    return &exchange{
+        totalSupply: common.BIG_ZERO,
+        balance: common.BIG_ZERO,
+        tokenBalance: common.BIG_ZERO,
+    }
 }
 
 func (e *exchange) SetTotalSupply(num *big.Int) {
@@ -57,19 +60,25 @@ func (e *exchange) subTokenBalance(num *big.Int) {
     e.tokenBalance = new(big.Int).Sub(e.tokenBalance, num)
 }
 
-func (e *exchange) AddLiquidity(value *big.Int,
-    minLiquidity *big.Int, maxTokens *big.Int) (*big.Int, error) {
+// 添加流动性将会铸造 lp 代币, 影响总流动性
+// 调用方法前需要预储值 value 数量的 delta
+// 储值方法: AddBalance
+// 该方法结束后将要转移tokenAmount数量的代币到流动池
+// transfer
+func (e *exchange) AddLiquidity(
+    value *big.Int, minLiquidity *big.Int, 
+    maxTokens *big.Int) (*big.Int, *big.Int, error) {
     // assert value > 0 and maxTokens > 0
     if common.BigIntCmpLte(value, common.BIG_ZERO) ||
         common.BigIntCmpLte(maxTokens, common.BIG_ZERO) {
-        return nil, errors.New("value and maxTokens must be > 0")
+        return nil, nil, errors.New("value and maxTokens must be > 0")
     }
     totalLiquidity := e.totalSupply
     // totalLiquidity > 0
     if common.BigIntCmpGt(totalLiquidity, common.BIG_ZERO) {
         // assert minLiquidity > 0
         if (common.BigIntCmpLte(minLiquidity, common.BIG_ZERO)) {
-            return nil, errors.New("minLiquidity must be > 0") 
+            return nil, nil, errors.New("minLiquidity must be > 0") 
         }
         deltaReserve := new(big.Int).Sub(e.balance, value)
         tokenReserve := e.tokenBalance
@@ -80,20 +89,23 @@ func (e *exchange) AddLiquidity(value *big.Int,
         // liquidityMinted = value * totalLiquidity / deltaReserve
         liquidityMinted := new(big.Int).Mul(value, totalLiquidity)
         liquidityMinted = new(big.Int).Div(liquidityMinted, deltaReserve)
-        // assert maxTokens >= tokenAmount && liquidityMinted >= minLiquidity
+        //assert maxTokens >= tokenAmount && liquidityMinted >= minLiquidity
         if common.BigIntCmpLt(maxTokens, tokenAmount) || 
             common.BigIntCmpLt(liquidityMinted, minLiquidity) {
-            return liquidityMinted, fmt.Errorf("failed add liquidity")
+            return liquidityMinted, tokenAmount, fmt.Errorf(
+                "add liquidity limit: " +
+                "tokenAmount=%s/%s, liquidityMinted=%s/%s",
+                tokenAmount, maxTokens, liquidityMinted, minLiquidity)
         }
         e.addTokenBalance(tokenAmount)
         e.totalSupply = new(big.Int).Add(totalLiquidity, liquidityMinted)
-        return liquidityMinted, nil
+        return liquidityMinted, tokenAmount, nil
     }
     tokenAmount := maxTokens
     initialLiquidity := e.balance
     e.addTokenBalance(tokenAmount)
     e.totalSupply = initialLiquidity
-    return initialLiquidity, nil
+    return initialLiquidity, tokenAmount, nil
 }
 
 func (e *exchange) RemoveLiquidity(amount *big.Int, minDelta *big.Int, 
